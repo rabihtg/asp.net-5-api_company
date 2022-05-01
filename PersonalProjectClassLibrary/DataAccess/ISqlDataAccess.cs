@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PersonalProjectClassLibrary.Dto;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,5 +17,7 @@ namespace PersonalProjectClassLibrary.DataAccess
             Func<TFirst, TSecond, TThird, TFourth, TFirst> mapFunc, U parameters, string splitCol = "Id, Id, Id", string connectionId = "Default");
 
         Task SaveData<T>(string storedProc, T parameters, string connectionId = "Default");
+
+        Task UpdateEmployee(UpdateEmployeeDto employee, Guid employeeId, string connectionId = "Default");
     }
 }

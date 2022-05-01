@@ -18,9 +18,9 @@ namespace PersonalProjectClassLibrary.Migrations
                 .WithColumn("Name").AsString().Unique();
 
             Create.Table(TableNames.RoleTable)
-                .WithColumn("Id").AsInt32().PrimaryKey().Identity()
+                .WithColumn("Id").AsInt32().PrimaryKey()
                 .WithColumn("Name").AsString().Unique()
-                .WithColumn("AllowedActions").AsInt32().Unique();
+                .WithColumn("AllowedActions").AsString().Unique();
 
             Create.Table(TableNames.EmployeeTable)
                 .WithColumn("Id").AsGuid().PrimaryKey()

@@ -31,7 +31,9 @@ namespace PersonalProjectClassLibrary.Dto
 
         public string CellPhoneNumber { get; init; }
 
-        public Guid? AddressId { get; init; }
+        public string City { get; init; }
+
+        public string Street { get; init; }
 
         public List<Guid?> DepartmentIds { get; init; }
     }
@@ -58,7 +60,9 @@ namespace PersonalProjectClassLibrary.Dto
 
         public string CellPhoneNumber { get; init; }
 
-        public Guid? AddressId { get; init; }
+        public string City { get; init; }
+
+        public string Street { get; init; }
 
         public List<int?> DepartmentIds { get; init; }
     }

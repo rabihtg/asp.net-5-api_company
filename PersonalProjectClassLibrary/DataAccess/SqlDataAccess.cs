@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
+using PersonalProjectClassLibrary.Dto;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,39 +19,67 @@ namespace PersonalProjectClassLibrary.DataAccess
             _config = config;
         }
 
-        public Task<IEnumerable<T>> LoadData<T, U>(string storedProc,
+        public async Task<IEnumerable<T>> LoadData<T, U>(string storedProc,
             U parameters, string connectionId = "Default")
         {
             using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
-            return conn.QueryAsync<T>(storedProc, parameters, commandType: CommandType.StoredProcedure);
+            return await conn.QueryAsync<T>(storedProc, parameters, commandType: CommandType.StoredProcedure);
         }
 
-        public Task SaveData<T>(string storedProc,
+        public async Task SaveData<T>(string storedProc,
             T parameters, string connectionId = "Default")
         {
             using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
-            return conn.ExecuteAsync(storedProc, parameters, commandType: CommandType.StoredProcedure);
+            await conn.ExecuteAsync(storedProc, parameters, commandType: CommandType.StoredProcedure);
         }
 
-        public Task<IEnumerable<TFirst>> LoadWithOneRelation<TFirst, TSecond, U>(string storedProc,
+
+        public async Task UpdateEmployee(UpdateEmployeeDto employee, Guid employeeId, string connectionId = "Default")
+        {
+            var empParams = new DynamicParameters();
+            empParams.Add("Id", employeeId);
+            empParams.Add("FullName", employee.FullName);
+            empParams.Add("Salary", employee.Salary);
+            empParams.Add("CellPhoneNumber", employee.CellPhoneNumber);
+            empParams.Add("Email", employee.Email);
+            empParams.Add("Position", employee.Position);
+            empParams.Add("RoleId", employee.RoleId);
+
+            var adressParams = new DynamicParameters();
+
+            adressParams.Add("EmployeeId", employeeId);
+            adressParams.Add("City", employee.City);
+            adressParams.Add("Street", employee.Street);
+
+            using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
+            conn.Open();
+            using var trans = conn.BeginTransaction();
+
+            await conn.ExecuteAsync("dbo.spEmployee_Update", empParams, commandType: CommandType.StoredProcedure, transaction: trans);
+            await conn.ExecuteAsync("dbo.spAddress_Update", adressParams, commandType: CommandType.StoredProcedure, transaction: trans);
+
+            trans.Commit();
+        }
+
+        public async Task<IEnumerable<TFirst>> LoadWithOneRelation<TFirst, TSecond, U>(string storedProc,
             Func<TFirst, TSecond, TFirst> mapFunc, U parameters, string splitCol = "Id", string connectionId = "Default")
         {
             using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
-            return conn.QueryAsync(storedProc, mapFunc, parameters, splitOn: splitCol, commandType: CommandType.StoredProcedure);
+            return await conn.QueryAsync(storedProc, mapFunc, parameters, splitOn: splitCol, commandType: CommandType.StoredProcedure);
         }
 
-        public Task<IEnumerable<TFirst>> LoadWithTwoRelations<TFirst, TSecond, TThird, U>(string storedProc,
+        public async Task<IEnumerable<TFirst>> LoadWithTwoRelations<TFirst, TSecond, TThird, U>(string storedProc,
             Func<TFirst, TSecond, TThird, TFirst> mapFunc, U parameters, string splitCol = "Id, Id", string connectionId = "Default")
         {
             using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
-            return conn.QueryAsync(storedProc, mapFunc, parameters, splitOn: splitCol, commandType: CommandType.StoredProcedure);
+            return await conn.QueryAsync(storedProc, mapFunc, parameters, splitOn: splitCol, commandType: CommandType.StoredProcedure);
         }
 
-        public Task<IEnumerable<TFirst>> LoadWithThreeRelations<TFirst, TSecond, TThird, TFourth, U>(string storedProc,
+        public async Task<IEnumerable<TFirst>> LoadWithThreeRelations<TFirst, TSecond, TThird, TFourth, U>(string storedProc,
             Func<TFirst, TSecond, TThird, TFourth, TFirst> mapFunc, U parameters, string splitCol = "Id, Id, Id", string connectionId = "Default")
         {
             using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
-            return conn.QueryAsync(storedProc, mapFunc, parameters, splitOn: splitCol, commandType: CommandType.StoredProcedure);
+            return await conn.QueryAsync(storedProc, mapFunc, parameters, splitOn: splitCol, commandType: CommandType.StoredProcedure);
         }
     }
 }

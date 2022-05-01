@@ -8,11 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PersonalProjectClassLibrary.DataAccess;
+using PersonalProjectClassLibrary.DataServices;
 using PersonalProjectClassLibrary.Migrations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PersonalProjectAPI
 {
@@ -44,6 +42,10 @@ namespace PersonalProjectAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PersonalProjectAPI", Version = "v1" });
             });
+
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+
+            services.AddTransient<IEmployeeData, EmployeeData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +69,9 @@ namespace PersonalProjectAPI
                 endpoints.MapControllers();
             });
 
-            //app.MigrateUp();
+
+            //app.MigrateDown();
+            app.MigrateUp();
         }
     }
 }

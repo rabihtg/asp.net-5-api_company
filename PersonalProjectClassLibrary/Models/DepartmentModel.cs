@@ -9,7 +9,7 @@ namespace PersonalProjectClassLibrary.Models
     public record DepartmentModel
     {
         public Guid Id { get; init; }
-        public string DepartmentName { get; init; }
+        public string Name { get; init; }
 
         public List<EmployeeModel> Employees { get; init; }
     }
