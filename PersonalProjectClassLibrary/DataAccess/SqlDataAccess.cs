@@ -33,8 +33,7 @@ namespace PersonalProjectClassLibrary.DataAccess
             await conn.ExecuteAsync(storedProc, parameters, commandType: CommandType.StoredProcedure);
         }
 
-
-        public async Task UpdateEmployee(UpdateEmployeeDto employee, Guid employeeId, string connectionId = "Default")
+        public async Task InsertEmployee(InsertEmployeeDto employee, Guid employeeId, string connectionId = "Default")
         {
             var empParams = new DynamicParameters();
             empParams.Add("Id", employeeId);
@@ -44,19 +43,38 @@ namespace PersonalProjectClassLibrary.DataAccess
             empParams.Add("Email", employee.Email);
             empParams.Add("Position", employee.Position);
             empParams.Add("RoleId", employee.RoleId);
+            empParams.Add("DateStarted", DateTime.UtcNow);
 
             var adressParams = new DynamicParameters();
 
+            adressParams.Add("Id", Guid.NewGuid());
             adressParams.Add("EmployeeId", employeeId);
             adressParams.Add("City", employee.City);
             adressParams.Add("Street", employee.Street);
+
+            var bulkEmpDepParams = new List<dynamic>();
+
+            foreach (var id in employee.DepartmentIds)
+            {
+                bulkEmpDepParams.Add(new
+                {
+                    EmployeeId = employeeId,
+                    DepartmentId = id
+                });
+            }
 
             using var conn = new SqlConnection(_config.GetConnectionString(connectionId));
             conn.Open();
             using var trans = conn.BeginTransaction();
 
-            await conn.ExecuteAsync("dbo.spEmployee_Update", empParams, commandType: CommandType.StoredProcedure, transaction: trans);
-            await conn.ExecuteAsync("dbo.spAddress_Update", adressParams, commandType: CommandType.StoredProcedure, transaction: trans);
+            await conn.ExecuteAsync("dbo.spEmployee_Insert", empParams,
+                commandType: CommandType.StoredProcedure, transaction: trans);
+
+            await conn.ExecuteAsync("dbo.spAddress_Insert", adressParams,
+                commandType: CommandType.StoredProcedure, transaction: trans);
+
+            await conn.ExecuteAsync("dbo.spEmployeeDepartment_Insert", bulkEmpDepParams,
+                commandType: CommandType.StoredProcedure, transaction: trans);
 
             trans.Commit();
         }

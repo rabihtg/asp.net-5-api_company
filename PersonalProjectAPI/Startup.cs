@@ -1,12 +1,9 @@
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PersonalProjectClassLibrary.DataAccess;
 using PersonalProjectClassLibrary.DataServices;
@@ -44,7 +41,7 @@ namespace PersonalProjectAPI
             });
 
             services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-
+            services.AddTransient<IAddressData, AddressData>();
             services.AddTransient<IEmployeeData, EmployeeData>();
         }
 
@@ -69,9 +66,9 @@ namespace PersonalProjectAPI
                 endpoints.MapControllers();
             });
 
-
+            //DataBase.EnsureDataBase();
             //app.MigrateDown();
-            app.MigrateUp();
+            //app.MigrateUp();
         }
     }
 }

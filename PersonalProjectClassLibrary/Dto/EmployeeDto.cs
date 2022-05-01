@@ -26,7 +26,7 @@ namespace PersonalProjectClassLibrary.Dto
         public decimal Salary { get; init; }
 
         [Required]
-        [RegularExpression(@"^[a-zA-Z0-9]{1,}([!#$%&'*+-/=_`?^{|.][a-zA-Z0-9]{1,})*@([a-zA-Z0-9]([-.][a-zA-Z0-9])*){1,}\.[a-zA-Z]{2,3}$)")]
+        [RegularExpression(@"(^[a-zA-Z0-9]{1,}([!#$%&'*+-/=_`?^{|.][a-zA-Z0-9]{1,})*?)+@([a-zA-Z0-9]([-.][a-zA-Z0-9])*){1,}\.[a-zA-Z]{2,3}$")]
         public string Email { get; init; }
 
         public string CellPhoneNumber { get; init; }
@@ -35,7 +35,7 @@ namespace PersonalProjectClassLibrary.Dto
 
         public string Street { get; init; }
 
-        public List<Guid?> DepartmentIds { get; init; }
+        public List<Guid> DepartmentIds { get; init; }
     }
     public record UpdateEmployeeDto
     {
@@ -55,16 +55,10 @@ namespace PersonalProjectClassLibrary.Dto
         public decimal Salary { get; init; }
 
         [Required]
-        [RegularExpression(@"^[a-zA-Z0-9]{1,}([!#$%&'*+-/=_`?^{|.][a-zA-Z0-9]{1,})*@([a-zA-Z0-9]([-.][a-zA-Z0-9])*){1,}\.[a-zA-Z]{2,3}$)")]
+        [RegularExpression(@"(^[a-zA-Z0-9]{1,}([!#$%&'*+-/=_`?^{|.][a-zA-Z0-9]{1,})*?)+@([a-zA-Z0-9]([-.][a-zA-Z0-9])*){1,}\.[a-zA-Z]{2,3}$")]
         public string Email { get; init; }
 
         public string CellPhoneNumber { get; init; }
-
-        public string City { get; init; }
-
-        public string Street { get; init; }
-
-        public List<int?> DepartmentIds { get; init; }
     }
 
 }

@@ -50,12 +50,17 @@ namespace PersonalProjectClassLibrary.DataServices
 
         public async Task InsertEmployee(InsertEmployeeDto employeeDto)
         {
-            await _db.SaveData("dbo.spEmployee_Insert", employeeDto);
+            await _db.InsertEmployee(employeeDto, Guid.NewGuid());
         }
 
         public async Task UpdateEmployee(Guid id, UpdateEmployeeDto employeeDto)
         {
-            await _db.UpdateEmployee(employeeDto, id);
+            var dp = new DynamicParameters();
+
+            dp.AddDynamicParams(employeeDto);
+            dp.Add("Id", id);
+
+            await _db.SaveData("dbo.spEmployee_Update", dp);
         }
 
         public async Task DeleteEmployee(Guid id)

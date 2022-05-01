@@ -18,6 +18,6 @@ namespace PersonalProjectClassLibrary.DataAccess
 
         Task SaveData<T>(string storedProc, T parameters, string connectionId = "Default");
 
-        Task UpdateEmployee(UpdateEmployeeDto employee, Guid employeeId, string connectionId = "Default");
+        Task InsertEmployee(InsertEmployeeDto employee, Guid employeeId, string connectionId = "Default");
     }
 }
