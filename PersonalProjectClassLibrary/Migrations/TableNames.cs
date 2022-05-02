@@ -12,10 +12,14 @@ namespace PersonalProjectClassLibrary.Migrations
 
         public static string RoleTable { get; } = "Roles";
 
+        public static string RefreshTokenTable { get; } = "RefreshTokens";
+
         public static string AddressTable { get; } = "Adresses";
 
         public static string DepartmentTable { get; } = "Departments";
 
         public static string Employee_DepartmentTable { get; } = "Employees_Departments";
+
+        public static string UserTable { get;} = "Users";
     }
 }

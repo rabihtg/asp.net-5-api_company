@@ -17,6 +17,18 @@ namespace PersonalProjectClassLibrary.Migrations
                 .WithColumn("Id").AsGuid().PrimaryKey()
                 .WithColumn("Name").AsString().Unique();
 
+            Create.Table(TableNames.UserTable)
+                .WithColumn("Id").AsGuid().PrimaryKey()
+                .WithColumn("Email").AsString().Unique()
+                .WithColumn("Password").AsString();
+
+            Create.Table(TableNames.RefreshTokenTable)
+                .WithColumn("Id").AsGuid().PrimaryKey()
+                .WithColumn("Token").AsString().Unique()
+                .WithColumn("CreatedDate").AsDateTime()
+                .WithColumn("ExpiryDate").AsDateTime()
+                .WithColumn("UserId").AsGuid().ForeignKey(TableNames.UserTable, "Id").OnDeleteOrUpdate(Rule.Cascade);
+
             Create.Table(TableNames.RoleTable)
                 .WithColumn("Id").AsInt32().PrimaryKey()
                 .WithColumn("Name").AsString().Unique()
@@ -46,6 +58,8 @@ namespace PersonalProjectClassLibrary.Migrations
 
         public override void Down()
         {
+
+            Delete.Table(TableNames.UserTable);
 
             Delete.Table(TableNames.Employee_DepartmentTable);
             Delete.Table(TableNames.AddressTable);

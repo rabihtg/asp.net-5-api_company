@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PersonalProjectClassLibrary.DataServices;
 using PersonalProjectClassLibrary.Dto;
 using System;
@@ -8,6 +9,7 @@ namespace PersonalProjectAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeData _data;

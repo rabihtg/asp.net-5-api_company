@@ -8,6 +8,10 @@ using Microsoft.OpenApi.Models;
 using PersonalProjectClassLibrary.DataAccess;
 using PersonalProjectClassLibrary.DataServices;
 using PersonalProjectClassLibrary.Migrations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using PersonalProjectClassLibrary.JWT;
 
 namespace PersonalProjectAPI
 {
@@ -26,6 +30,24 @@ namespace PersonalProjectAPI
 
             services.AddControllers();
 
+            var key = Encoding.ASCII.GetBytes(Configuration["JWT:Key"]);
+
+            var tokenValParams = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
+                IssuerSigningKey = new SymmetricSecurityKey(key)
+            };
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.SaveToken = true;
+                    opt.TokenValidationParameters = tokenValParams;
+                });
+
             services.AddFluentMigratorCore()
                 .ConfigureRunner(opt =>
                 {
@@ -40,9 +62,16 @@ namespace PersonalProjectAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PersonalProjectAPI", Version = "v1" });
             });
 
+            
+            services.AddTransient<IJwtManager, JwtManager>();
+            services.AddSingleton(tokenValParams);
+
+
+            services.AddTransient<IRefreshTokenData, RefreshTokenData>();
             services.AddTransient<ISqlDataAccess, SqlDataAccess>();
             services.AddTransient<IAddressData, AddressData>();
             services.AddTransient<IEmployeeData, EmployeeData>();
+            services.AddTransient<IUserData, UserData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +87,8 @@ namespace PersonalProjectAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
