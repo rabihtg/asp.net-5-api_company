@@ -20,6 +20,7 @@ namespace PersonalProjectClassLibrary.Migrations
             Create.Table(TableNames.UserTable)
                 .WithColumn("Id").AsGuid().PrimaryKey()
                 .WithColumn("Email").AsString().Unique()
+                .WithColumn("Age").AsInt16()
                 .WithColumn("Password").AsString();
 
             Create.Table(TableNames.RefreshTokenTable)
@@ -58,7 +59,7 @@ namespace PersonalProjectClassLibrary.Migrations
 
         public override void Down()
         {
-
+            Delete.Table(TableNames.RefreshTokenTable);
             Delete.Table(TableNames.UserTable);
 
             Delete.Table(TableNames.Employee_DepartmentTable);

@@ -14,7 +14,9 @@ namespace PersonalProjectClassLibrary.Migrations
         public override void Up()
         {
             Insert.IntoTable(TableNames.UserTable)
-                .Row(new {Id = Guid.NewGuid() ,Email = "rabih@work.com", Password = "rabih123"});
+                .Row(new {Id = Guid.NewGuid() ,Email = "rabih@work.com", Password = "rabih123", Age = 33})
+                .Row(new {Id = Guid.NewGuid() ,Email = "hasan@work.com", Password = "hasan123", Age = 21})
+                .Row(new {Id = Guid.NewGuid() ,Email = "jamal@work.com", Password = "jamal123", Age = 19});
 
             Insert.IntoTable(TableNames.RoleTable)
                 .Row(new { Id = 1, Name = "Admin", AllowedActions = AllowedActions.readWrite })
@@ -231,6 +233,7 @@ namespace PersonalProjectClassLibrary.Migrations
 
         public override void Down()
         {
+            Delete.FromTable(TableNames.RefreshTokenTable).AllRows();
             Delete.FromTable(TableNames.UserTable).AllRows();
 
             Delete.FromTable(TableNames.Employee_DepartmentTable).AllRows();

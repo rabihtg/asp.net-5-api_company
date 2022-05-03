@@ -12,7 +12,6 @@ namespace PersonalProjectClassLibrary.DataServices
 {
     public class EmployeeData : IEmployeeData
     {
-        // TODO - Continue in update Employee Logic, Write update Adress procedure and check Employee update procedure
         // TODO - Revisit EmployeeWithInfoLogic
         // TODO - Consider on adress per employee or Make a way to add many adresses with employee
         // TODO - Check to see if commandType can be set dynamicaly

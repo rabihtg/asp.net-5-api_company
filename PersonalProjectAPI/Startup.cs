@@ -12,6 +12,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PersonalProjectClassLibrary.JWT;
+using System;
+using PersonalProjectClassLibrary.Policies;
+using Microsoft.AspNetCore.Authorization;
+using PersonalProjectClassLibrary.Middlewares;
 
 namespace PersonalProjectAPI
 {
@@ -48,6 +52,17 @@ namespace PersonalProjectAPI
                     opt.TokenValidationParameters = tokenValParams;
                 });
 
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("RestrictUnderAgePolicy", policy =>
+                {
+                    policy.AddRequirements(new Over21AgeRequirement(21));
+                });
+                
+            });
+
+            services.AddTransient<IAuthorizationHandler, Over21AgeAuthHandler>();
+
             services.AddFluentMigratorCore()
                 .ConfigureRunner(opt =>
                 {
@@ -77,9 +92,11 @@ namespace PersonalProjectAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseMiddleware<ExceptionHandlerMid>();
+                //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PersonalProjectAPI v1"));
             }

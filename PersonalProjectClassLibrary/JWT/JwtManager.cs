@@ -50,10 +50,11 @@ namespace PersonalProjectClassLibrary.JWT
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Email, checkUser.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("age", checkUser.Age.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(TimeSpan.Parse(_config["JWT:TokenLifeTime"]).Seconds),
+                Expires = DateTime.UtcNow.AddMinutes(TimeSpan.Parse(_config["JWT:TokenLifeTime"]).Minutes),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
             var refreshTokenOptions = new SecurityTokenDescriptor

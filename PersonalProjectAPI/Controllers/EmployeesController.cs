@@ -9,7 +9,7 @@ namespace PersonalProjectAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize("RestrictUnderAgePolicy")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeData _data;
